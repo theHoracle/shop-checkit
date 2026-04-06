@@ -1,26 +1,133 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: oklch(0.98 0.01 75);
+  --foreground: oklch(0.24 0.02 42);
+  --surface: oklch(0.995 0.005 75);
+  --surface-strong: oklch(0.93 0.018 74);
+  --line: oklch(0.87 0.015 72);
+  --muted: oklch(0.57 0.02 56);
+  --accent: oklch(0.63 0.15 44);
+  --accent-strong: oklch(0.49 0.14 42);
+  --shadow: 0 30px 80px color-mix(in srgb, var(--foreground) 10%, transparent);
+  --font-body:
+    "Avenir Next", "Segoe UI", "Helvetica Neue", "Nimbus Sans", sans-serif;
+  --font-display:
+    "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Times New Roman",
+    serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
+  min-height: 100vh;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), sans-serif;
+  background-image:
+    radial-gradient(
+      circle at top left,
+      color-mix(in srgb, var(--accent) 10%, transparent) 0,
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface) 96%, transparent),
+      var(--background)
+    );
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    opacity 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.container-shell {
+  width: min(100% - 2rem, 76rem);
+  margin-inline: auto;
+}
+
+.display-copy {
+  font-family: var(--font-display), serif;
+  letter-spacing: -0.04em;
+}
+
+.section-eyebrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.surface-ring {
+  border: 1px solid color-mix(in srgb, var(--line) 90%, white 10%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--surface) 94%, white 6%),
+    color-mix(in srgb, var(--surface) 98%, transparent)
+  );
+  box-shadow: var(--shadow);
+}
+
+.page-reveal {
+  animation: page-reveal 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes page-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+  }
 }
