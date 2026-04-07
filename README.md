@@ -5,10 +5,19 @@ Editorial e-commerce storefront for the DummyJSON assessment, built with Next.js
 ## Setup
 
 ```bash
+# Install dependencies
 pnpm install
+
+# Copy environment variables
 cp .env.example .env.local
+
+# Start development server
 pnpm dev
+
+# Run tests
 pnpm test
+
+# Build for production
 pnpm build
 ```
 
@@ -48,6 +57,14 @@ pnpm build
 - DummyJSON cart behavior is simulated through its REST endpoints, so cart persistence is intentionally handled client-side in this app instead of pretending the API is durable.
 - The Cloudflare deployment setup is included through package/config/scripts, but advanced Worker response caching with `x-cache-status` still needs a custom OpenNext worker entry if you want full bonus parity.
 - The rating filter behaves like a URL-driven refinement layered on top of the fetched dataset, which is a deliberate compromise to keep the server-only data rule intact without adding a bespoke search backend.
+
+## If We Had More Time
+
+The next feature I would add is a personalized discovery layer built around `recently viewed` and `similar products`.
+
+- It would improve the site immediately without changing the core shopping flow, because the current catalog and detail experience already has the right data to support stronger merchandising.
+- It fits the existing architecture well: recently viewed products can live in persisted client state beside the cart, while similar products can be rendered on the server from category and rating data.
+- It would make the product detail page and cart page feel much more complete by giving shoppers a natural “what next?” path instead of a dead end after a single product view.
 
 ## Bonus Tasks
 
