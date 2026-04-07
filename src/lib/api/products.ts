@@ -2,10 +2,51 @@ import { cacheLife, cacheTag } from "next/cache";
 import type { CatalogPageResult, SearchState } from "@/types/api";
 import type { Product, ProductsResponse } from "@/types/product";
 import { globalFetch } from "../fetch/globalFetch";
-import { Category } from "./types";
+import type { Category, CategoryApiValue } from "./types";
 
 const PER_PAGE = 20;
 const FILTER_BATCH_SIZE = 100;
+
+function formatCategoryName(slug: string) {
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function normalizeCategory(
+  rawCategory: CategoryApiValue,
+  index: number,
+): Category {
+  if (typeof rawCategory === "string") {
+    return {
+      slug: rawCategory,
+      name: formatCategoryName(rawCategory),
+      url: `/products/category/${encodeURIComponent(rawCategory)}`,
+    };
+  }
+
+  const slugSource =
+    typeof rawCategory.slug === "string"
+      ? rawCategory.slug
+      : typeof rawCategory.name === "string"
+        ? rawCategory.name
+        : `category-${index}`;
+  const slug = slugSource.toLowerCase().replaceAll(/\s+/g, "-");
+
+  return {
+    slug,
+    name:
+      typeof rawCategory.name === "string"
+        ? rawCategory.name
+        : formatCategoryName(slug),
+    url:
+      typeof rawCategory.url === "string"
+        ? rawCategory.url
+        : `/products/category/${encodeURIComponent(slug)}`,
+  };
+}
 
 function paginate(
   products: Product[],
@@ -78,7 +119,21 @@ export async function getCategories() {
   cacheLife("days");
   cacheTag("categories");
 
-  return globalFetch<Category[]>("/products/categories", { skipAuth: true });
+  const categories = await globalFetch<CategoryApiValue[]>(
+    "/products/categories",
+    {
+      skipAuth: true,
+    },
+  );
+
+  const dedupedCategories = new Map<string, Category>();
+
+  categories.forEach((category, index) => {
+    const normalizedCategory = normalizeCategory(category, index);
+    dedupedCategories.set(normalizedCategory.slug, normalizedCategory);
+  });
+
+  return Array.from(dedupedCategories.values());
 }
 
 export async function getCatalogPage(searchState: SearchState) {

@@ -21,7 +21,7 @@ export function RatingToggle({ active }: { active: boolean }) {
         router.push(`${pathname}${query ? `?${query}` : ""}`);
       }}
     >
-      4★ and above
+      4★+
     </Button>
   );
 }

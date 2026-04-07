@@ -1,33 +1,31 @@
 "use client";
 
-import { useEffect, useTransition } from "react";
-import {
-  removeFromCartAction,
-  updateCartItemAction,
-} from "@/actions/cart.actions";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { useCart } from "@/hooks/useCart";
 import { formatPrice } from "@/lib/utils/formatPrice";
-import type { Cart } from "@/types/cart";
 
-export function CartList({ initialCart }: { initialCart: Cart | null }) {
-  const { items, optimisticQuantity, optimisticRemove, syncCart, setOpen } =
+export function CartList() {
+  const { items, updateQuantity, removeItem, clearCart, hasHydrated, setOpen } =
     useCart();
-  const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    syncCart(initialCart);
-  }, [initialCart, syncCart]);
 
   useEffect(() => {
     setOpen(false);
   }, [setOpen]);
 
+  if (!hasHydrated) {
+    return (
+      <div className="rounded-4xl border border-line bg-surface p-8 text-sm leading-7 text-muted">
+        Restoring your saved cart...
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return (
-      <div className="rounded-[2rem] border border-dashed border-line p-8 text-sm leading-7 text-muted">
+      <div className="rounded-4xl border border-dashed border-line p-8 text-sm leading-7 text-muted">
         Your cart is empty. Add a product from the listing or detail page and it
-        will appear here immediately.
+        will stay in this browser between visits.
       </div>
     );
   }
@@ -59,23 +57,7 @@ export function CartList({ initialCart }: { initialCart: Cart | null }) {
                   <button
                     type="button"
                     onClick={() => {
-                      if (item.quantity === 1) {
-                        optimisticRemove(item.id);
-                        startTransition(async () => {
-                          const cart = await removeFromCartAction(item.id);
-                          syncCart(cart);
-                        });
-                        return;
-                      }
-
-                      optimisticQuantity(item.id, item.quantity - 1);
-                      startTransition(async () => {
-                        const cart = await updateCartItemAction({
-                          id: item.id,
-                          quantity: item.quantity - 1,
-                        });
-                        syncCart(cart);
-                      });
+                      updateQuantity(item.id, item.quantity - 1);
                     }}
                   >
                     −
@@ -86,14 +68,7 @@ export function CartList({ initialCart }: { initialCart: Cart | null }) {
                   <button
                     type="button"
                     onClick={() => {
-                      optimisticQuantity(item.id, item.quantity + 1);
-                      startTransition(async () => {
-                        const cart = await updateCartItemAction({
-                          id: item.id,
-                          quantity: item.quantity + 1,
-                        });
-                        syncCart(cart);
-                      });
+                      updateQuantity(item.id, item.quantity + 1);
                     }}
                   >
                     +
@@ -102,14 +77,7 @@ export function CartList({ initialCart }: { initialCart: Cart | null }) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => {
-                    optimisticRemove(item.id);
-                    startTransition(async () => {
-                      const cart = await removeFromCartAction(item.id);
-                      syncCart(cart);
-                    });
-                  }}
-                  disabled={isPending}
+                  onClick={() => removeItem(item.id)}
                 >
                   Remove
                 </Button>
@@ -119,7 +87,7 @@ export function CartList({ initialCart }: { initialCart: Cart | null }) {
         ))}
       </div>
 
-      <aside className="surface-ring h-fit rounded-[2rem] p-6">
+      <aside className="surface-ring h-fit rounded-4xl p-6">
         <p className="section-eyebrow">Summary</p>
         <h2 className="display-copy mt-4 text-3xl">Order preview</h2>
         <div className="mt-6 space-y-3 text-sm text-muted">
@@ -134,6 +102,9 @@ export function CartList({ initialCart }: { initialCart: Cart | null }) {
             </span>
           </div>
         </div>
+        <Button className="mt-6 w-full" variant="secondary" onClick={clearCart}>
+          Clear cart
+        </Button>
       </aside>
     </div>
   );

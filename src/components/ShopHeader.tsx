@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -16,7 +15,7 @@ export function ShopHeader() {
             Shop Checkit
           </Link>
           <span className="hidden text-xs uppercase tracking-[0.2em] text-muted md:inline-flex">
-            Editorial Commerce Study
+            E-Commerce Shop
           </span>
         </div>
         <nav className="flex flex-wrap items-center gap-2 text-sm">

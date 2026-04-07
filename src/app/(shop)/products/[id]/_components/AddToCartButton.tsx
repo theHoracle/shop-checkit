@@ -1,8 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { addToCartAction } from "@/actions/cart.actions";
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { useCart } from "@/hooks/useCart";
 
@@ -16,29 +14,22 @@ export function AddToCartButton({
     thumbnail?: string;
   };
 }) {
-  const router = useRouter();
-  const { optimisticAdd, syncCart, setOpen } = useCart();
-  const [isPending, startTransition] = useTransition();
+  const { addItem, setOpen } = useCart();
+  const [justAdded, setJustAdded] = useState(false);
 
   return (
     <Button
       className="w-full md:w-auto"
       onClick={() => {
-        optimisticAdd(product);
+        addItem(product);
         setOpen(true);
-
-        startTransition(async () => {
-          try {
-            const cart = await addToCartAction({ id: product.id, quantity: 1 });
-            syncCart(cart);
-          } catch {
-            router.push("/login?redirect=/cart");
-          }
-        });
+        setJustAdded(true);
+        window.setTimeout(() => {
+          setJustAdded(false);
+        }, 1200);
       }}
-      disabled={isPending}
     >
-      {isPending ? "Adding..." : "Add to cart"}
+      {justAdded ? "Added" : "Add to cart"}
     </Button>
   );
 }

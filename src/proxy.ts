@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 export function proxy(request: NextRequest) {
   const hasToken = request.cookies.has("accessToken");
 
-  if (!hasToken && request.nextUrl.pathname.startsWith("/cart")) {
+  if (!hasToken && request.nextUrl.pathname.startsWith("/account")) {
     const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
+    loginUrl.searchParams.set("redirect", "/account");
     return NextResponse.redirect(loginUrl);
   }
 
@@ -14,5 +14,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/cart/:path*", "/account/:path*"],
+  matcher: ["/account/:path*"],
 };

@@ -1,5 +1,5 @@
-import { cache } from "react";
 import { cacheLife } from "next/cache";
+import { cache } from "react";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { EmptyState } from "@/components/EmptyState";
 import { Pagination } from "@/components/Pagination";
@@ -12,17 +12,19 @@ import type { RouteSearchParams } from "@/types/api";
 
 export const unstable_instant = true;
 
-const getCatalogData = cache(async (searchState: ReturnType<typeof parseSearchState>) => {
-  "use cache";
-  cacheLife("minutes");
-  
-  const [catalogPage, categories] = await Promise.all([
-    getCatalogPage(searchState),
-    getCategories(),
-  ]);
-  
-  return { catalogPage, categories };
-});
+const getCatalogData = cache(
+  async (searchState: ReturnType<typeof parseSearchState>) => {
+    "use cache";
+    cacheLife("minutes");
+
+    const [catalogPage, categories] = await Promise.all([
+      getCatalogPage(searchState),
+      getCategories(),
+    ]);
+
+    return { catalogPage, categories };
+  },
+);
 
 export default async function ProductsPage({
   searchParams,
@@ -33,7 +35,6 @@ export default async function ProductsPage({
   const searchState = parseSearchState(resolvedSearchParams);
 
   const { catalogPage, categories } = await getCatalogData(searchState);
-  console.log(catalogPage, categories);
 
   return (
     <div className="container-shell space-y-10 py-10">
@@ -53,13 +54,15 @@ export default async function ProductsPage({
             {catalogPage.total} matching products
           </p>
         </div>
-        <div className="mt-8 grid gap-4 xl:grid-cols-[1.4fr_0.95fr_auto]">
+        <div className="mt-8 grid gap-4 lg:grid-cols-[1fr_0.6fr] lg:items-center">
           <SearchBar defaultValue={searchState.q} />
+         <div className="flex items-center gap-4 justify-between lg:justify-end!">
           <CategoryFilter
             categories={categories}
             selectedCategory={searchState.category}
-          />
+            />
           <RatingToggle active={searchState.rating === "4plus"} />
+          </div>
         </div>
       </section>
 

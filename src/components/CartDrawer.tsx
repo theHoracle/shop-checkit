@@ -6,7 +6,7 @@ import { useCart } from "@/hooks/useCart";
 import { formatPrice } from "@/lib/utils/formatPrice";
 
 export function CartDrawer() {
-  const { isOpen, items, setOpen } = useCart();
+  const { hasHydrated, isOpen, items, setOpen } = useCart();
 
   const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -45,10 +45,14 @@ export function CartDrawer() {
           </button>
         </div>
         <div className="flex-1 space-y-4 overflow-y-auto">
-          {items.length === 0 ? (
+          {!hasHydrated ? (
+            <div className="rounded-[1.75rem] border border-line bg-surface p-6 text-sm leading-7 text-muted">
+              Restoring your saved cart...
+            </div>
+          ) : items.length === 0 ? (
             <div className="rounded-[1.75rem] border border-dashed border-line p-6 text-sm leading-7 text-muted">
               Your cart is quiet right now. Add a product to open the drawer
-              with an instant optimistic update.
+              with an instant local update.
             </div>
           ) : (
             items.map((item) => (

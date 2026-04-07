@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
-import { useDebounce } from "./useDebounce";
 import { vi } from "vitest";
+import { useDebounce } from "./useDebounce";
 
 describe("useDebounce", () => {
   it("delays value updates until the timeout completes", () => {

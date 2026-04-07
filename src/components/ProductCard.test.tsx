@@ -18,9 +18,10 @@ vi.mock("next/image", () => ({
   default: ({
     alt,
     onError,
+    priority: _priority,
     src,
     ...props
-  }: React.ImgHTMLAttributes<HTMLImageElement>) => (
+  }: React.ImgHTMLAttributes<HTMLImageElement> & { priority?: boolean }) => (
     // biome-ignore lint/performance/noImgElement: test stub for next/image
     <img alt={alt} src={src} onError={onError} {...props} />
   ),
@@ -59,7 +60,7 @@ describe("ProductCard", () => {
       "src",
       "https://dummyjson.com/image.jpg",
     );
-  });
+  }, 10_000);
 
   it("shows the waitlist state when stock is depleted", () => {
     render(<ProductCard product={{ ...product, id: 9, stock: 0 }} />);

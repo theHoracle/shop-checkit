@@ -1,10 +1,10 @@
-import { AuthUser } from "@/types/auth";
 import { create } from "zustand";
+import type { AuthUser } from "@/types/auth";
 
 type AuthStore = {
-    user: AuthUser | null;
-    setUser: (user: AuthUser) => void;
-}
+  user: AuthUser | null;
+  setUser: (user: AuthUser) => void;
+};
 
 export const useAuthStore = create<AuthStore>()((set) => ({
   user: null,

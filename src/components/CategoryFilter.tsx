@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import type { Category } from "@/lib/api/types";
 import { buildSearchParams } from "@/lib/utils/buildSearchParams";
-import { Category } from "@/lib/api/types";
 
 export function CategoryFilter({
   categories,
@@ -16,7 +16,7 @@ export function CategoryFilter({
   const searchParams = useSearchParams();
 
   return (
-    <label className="flex items-center gap-3 rounded-full border border-line bg-surface px-4">
+    <label className="flex items-center justify-between max-w-fit gap-3 rounded-full border border-line bg-surface px-4">
       <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
         Category
       </span>
@@ -34,7 +34,7 @@ export function CategoryFilter({
       >
         <option value="">All departments</option>
         {categories.map((category) => (
-          <option key={category.name} value={category.slug}>
+          <option key={category.slug} value={category.slug}>
             {category.name}
           </option>
         ))}

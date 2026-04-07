@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { CartDrawerActivity } from "@/components/CartDrawerActivity";
 import { ShopHeader } from "@/components/ShopHeader";
-import { AuthProvider } from "@/providers/AuthProvider";
 import { getSessionUser } from "@/lib/fetch/tokenStore";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 async function AuthWrapper({ children }: { children: React.ReactNode }) {
   const user = await getSessionUser();

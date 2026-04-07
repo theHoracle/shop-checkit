@@ -90,7 +90,7 @@ export default async function ProductPage({
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-[1.5rem] border border-line bg-surface p-4">
+            <div className="rounded-3xl border border-line bg-surface p-4">
               <p className="text-xs uppercase tracking-[0.18em] text-muted">
                 Shipping
               </p>
@@ -99,7 +99,7 @@ export default async function ProductPage({
                   "Priority fulfillment within 48 hours."}
               </p>
             </div>
-            <div className="rounded-[1.5rem] border border-line bg-surface p-4">
+            <div className="rounded-3xl border border-line bg-surface p-4">
               <p className="text-xs uppercase tracking-[0.18em] text-muted">
                 Policy
               </p>
