@@ -12,19 +12,19 @@ export function ProductImages({ product }: { product: Product }) {
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-[2rem] border border-line bg-surface p-4">
+      <div className="overflow-hidden rounded-4xl border border-line bg-surface p-4">
         <ProductThumb
           alt={product.title}
           src={activeImage}
           priority
-          className="aspect-square rounded-[1.5rem]"
+          className="aspect-square rounded-3xl"
         />
       </div>
       <div className="grid grid-cols-4 gap-3">
         {images.slice(0, 4).map((image) => (
           <button
             key={image}
-            className={`overflow-hidden rounded-[1.25rem] border p-1 ${
+            className={`overflow-hidden rounded-3xl border p-1 ${
               image === activeImage ? "border-accent" : "border-line"
             }`}
             onClick={() => setActiveImage(image)}
@@ -33,7 +33,7 @@ export function ProductImages({ product }: { product: Product }) {
             <ProductThumb
               alt={product.title}
               src={image}
-              className="aspect-square rounded-[1rem]"
+              className="aspect-square rounded-2xl"
             />
           </button>
         ))}

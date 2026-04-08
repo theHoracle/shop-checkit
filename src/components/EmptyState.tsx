@@ -13,7 +13,7 @@ export function EmptyState({
   ctaLabel: string;
 }) {
   return (
-    <div className="surface-ring rounded-[2rem] p-8 text-left">
+    <div className="surface-ring rounded-4xl p-8 text-left">
       <p className="section-eyebrow">Empty state</p>
       <h2 className="display-copy mt-4 text-3xl text-foreground">{heading}</h2>
       <p className="mt-3 max-w-2xl text-sm leading-7 text-muted">{message}</p>

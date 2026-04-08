@@ -12,7 +12,7 @@ export async function ProductReviews({ product }: { product: Product }) {
 
   if (!product.reviews?.length) {
     return (
-      <div className="rounded-[2rem] border border-dashed border-line p-6 text-sm leading-7 text-muted">
+      <div className="rounded-4xl border border-dashed border-line p-6 text-sm leading-7 text-muted">
         This DummyJSON product doesn't include review copy, so the streamed
         panel lands with a graceful empty state instead.
       </div>
@@ -24,7 +24,7 @@ export async function ProductReviews({ product }: { product: Product }) {
       {product.reviews.map((review) => (
         <article
           key={`${review.reviewerEmail}-${review.date}`}
-          className="rounded-[1.75rem] border border-line bg-surface p-5"
+          className="rounded-3xl border border-line bg-surface p-5"
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
