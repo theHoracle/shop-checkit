@@ -69,8 +69,8 @@ pnpm build
 - Example verification:
 
 ```bash
-curl -s -D - -o /dev/null "https://shop-checkit.jamesthehoracle.workers.dev/products?demo-cache-bust=1" | grep -i x-cache-status
-curl -s -D - -o /dev/null "https://shop-checkit.jamesthehoracle.workers.dev/products?page=2&category=beauty" | grep -i x-cache-status
+curl -s -D - -o /dev/null "https://shop-checkit-assessment.thehoraclestudio.xyz/products" | grep -i x-cache-status
+curl -s -D - -o /dev/null "https://shop-checkit-assessment.thehoraclestudio.xyz/products?page=2&category=beauty" | grep -i x-cache-status
 ```
 
 The second request to the same URL should show `x-cache-status: HIT` when the Workers cache entry is warm.
