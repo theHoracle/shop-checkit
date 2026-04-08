@@ -58,7 +58,7 @@ export function CartDrawer() {
             items.map((item) => (
               <div
                 key={item.id}
-                className="rounded-[1.5rem] border border-line bg-surface p-4"
+                className="rounded-3xl border border-line bg-surface p-4"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>

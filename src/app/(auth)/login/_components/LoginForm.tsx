@@ -48,7 +48,7 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
         />
       </div>
       {state.error ? (
-        <p className="rounded-[1.25rem] border border-[color:color-mix(in_srgb,var(--accent)_40%,white_60%)] bg-[color:color-mix(in_srgb,var(--accent)_10%,white_90%)] px-4 py-3 text-sm text-accent-strong">
+        <p className="rounded-[1.25rem] border border-[color-mix(in_srgb,var(--accent)_40%,white_60%)] bg-[color-mix(in_srgb,var(--accent)_10%,white_90%)] px-4 py-3 text-sm text-accent-strong">
           {state.error}
         </p>
       ) : null}
