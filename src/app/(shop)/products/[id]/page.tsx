@@ -11,7 +11,17 @@ import { AddToCartButton } from "./_components/AddToCartButton";
 import { ProductImages } from "./_components/ProductImages";
 import { ProductReviews } from "./_components/ProductReviews";
 
-// export const unstable_instant = true;
+export const unstable_instant = {
+  prefetch: "runtime",
+  samples: [
+    {
+      cookies: [{ name: "sessionUser", value: null }],
+      params: {
+        id: "1",
+      },
+    },
+  ],
+};
 
 export async function generateMetadata({
   params,

@@ -5,7 +5,14 @@ import { ProductGrid } from "@/components/ProductGrid";
 import { Button } from "@/components/ui/Button";
 import { getCategories, getFeaturedProducts } from "@/lib/api/products";
 
-export const unstable_instant = true;
+export const unstable_instant = {
+  prefetch: "runtime",
+  samples: [
+    {
+      cookies: [{ name: "sessionUser", value: null }],
+    },
+  ],
+};
 
 export default async function HomePage() {
   "use cache";

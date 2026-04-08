@@ -14,6 +14,7 @@ export interface CatalogPageResult<T> {
 }
 
 export interface RouteSearchParams {
+  [key: string]: string | string[] | undefined;
   page?: string;
   q?: string;
   category?: string;

@@ -10,7 +10,20 @@ import { getCatalogPage, getCategories } from "@/lib/api/products";
 import { parseSearchState } from "@/lib/utils/searchState";
 import type { RouteSearchParams } from "@/types/api";
 
-export const unstable_instant = true;
+export const unstable_instant = {
+  prefetch: "runtime",
+  samples: [
+    {
+      cookies: [{ name: "sessionUser", value: null }],
+      searchParams: {
+        page: null,
+        q: null,
+        category: null,
+        rating: null,
+      },
+    },
+  ],
+};
 
 const getCatalogData = cache(
   async (searchState: ReturnType<typeof parseSearchState>) => {

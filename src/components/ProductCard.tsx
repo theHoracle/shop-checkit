@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { ViewTransition } from "react";
 import { ProductThumb } from "@/components/ProductThumb";
 import { Badge } from "@/components/ui/Badge";
@@ -14,9 +15,23 @@ export function ProductCard({
   product: Product;
   priority?: boolean;
 }) {
+  const [shouldPrefetch, setShouldPrefetch] = useState(false);
+  const href = `/products/${product.id}`;
+
+  const armPrefetch = () => {
+    setShouldPrefetch(true);
+  };
+
   return (
-    <article className="group flex h-full flex-col gap-4 rounded-[2rem] border border-line/80 bg-surface p-4 shadow-[0_18px_48px_color-mix(in_srgb,var(--foreground)_7%,transparent)]">
-      <Link href={`/products/${product.id}`} className="flex flex-col gap-4">
+    <article className="group flex h-full flex-col gap-4 rounded-4xl border border-line/80 bg-surface p-4 shadow-[0_18px_48px_color-mix(in_srgb,var(--foreground)_7%,transparent)]">
+      <Link
+        href={href}
+        prefetch={shouldPrefetch ? null : false}
+        onFocus={armPrefetch}
+        onMouseEnter={armPrefetch}
+        onTouchStart={armPrefetch}
+        className="flex flex-col gap-4"
+      >
         <ViewTransition name={`product-${product.id}-${product.title}-image`}>
           <div className="overflow-hidden rounded-[1.75rem] bg-surface-strong">
             <ProductThumb

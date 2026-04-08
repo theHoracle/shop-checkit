@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { AppProviders } from "@/providers/AppProviders";
 import "./globals.css";
 
 const speculationRules = JSON.stringify({
@@ -37,10 +36,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full bg-background text-foreground">
-        <AppProviders>
-          {children}
-          <script type="speculationrules">{speculationRules}</script>
-        </AppProviders>
+        {children}
+        <script type="speculationrules">{speculationRules}</script>
       </body>
     </html>
   );

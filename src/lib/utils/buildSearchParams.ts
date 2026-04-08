@@ -1,6 +1,7 @@
 import type { ReadonlyURLSearchParams } from "next/navigation";
 
 type SearchParamValue = string | number | boolean | null | undefined;
+type SearchParamRecord = Record<string, string | string[] | undefined>;
 
 function isSearchParams(
   value: unknown,
@@ -9,10 +10,7 @@ function isSearchParams(
 }
 
 export function buildSearchParams(
-  current:
-    | URLSearchParams
-    | ReadonlyURLSearchParams
-    | Record<string, string | undefined>,
+  current: URLSearchParams | ReadonlyURLSearchParams | SearchParamRecord,
   updates: Record<string, SearchParamValue>,
 ) {
   let params: URLSearchParams;
@@ -22,7 +20,11 @@ export function buildSearchParams(
   } else {
     params = new URLSearchParams(
       Object.entries(current).flatMap(([key, value]) =>
-        value ? [[key, value]] : [],
+        Array.isArray(value)
+          ? value.filter(Boolean).map((entry) => [key, entry])
+          : value
+            ? [[key, value]]
+            : [],
       ),
     );
   }
