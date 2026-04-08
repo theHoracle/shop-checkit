@@ -52,10 +52,33 @@ pnpm build
 | Cart | browser-local Zustand | persisted client state | none | local updates only |
 | Auth/session | no cache | request time | none | cookie mutation + redirect |
 
+## OpenNext Cloudflare Cache Mapping
+
+- Next.js `cache: "force-cache"` and server-side cache APIs such as `"use cache"` are mapped by OpenNext onto its incremental cache layer in the Workers runtime. In practice, that means OpenNext stores cacheable RSC/fetch artifacts through the configured `incrementalCache` adapter rather than through browser memory.
+- Next.js time-based revalidation such as `next: { revalidate: 60 }` or cache profiles like `cacheLife("minutes")` depend on that same incremental cache layer plus OpenNext's Cloudflare revalidation plumbing. On Cloudflare, those entries are meant to live in the configured persistent backend and be refreshed when their TTL expires.
+- Next.js `cache: "no-store"` bypasses the OpenNext incremental cache and always executes at request time in the Worker.
+- Tag/path invalidation APIs such as `revalidateTag()` and `revalidatePath()` are not just browser hints on Cloudflare. OpenNext maps them to Worker-side cache metadata/invalidation infrastructure, which is why persistent cache storage matters if you want those semantics to survive across requests and deployments.
+- For this assessment repo, persistent OpenNext cache storage is intentionally not enabled yet: `r2IncrementalCache` is left commented out in `open-next.config.ts` because the current Cloudflare account cannot enable R2 without billing being active.
+
+## Cloudflare Listing Edge Cache
+
+- The `/products` HTML response is wrapped by a custom Cloudflare worker entry in `custom-worker.ts`.
+- That worker uses `caches.default` to store listing page responses for 5 minutes and stamps `x-cache-status: MISS` on the first render and `x-cache-status: HIT` on subsequent edge-cache hits.
+- The cache key varies by full listing URL plus a hashed `sessionUser` cookie value so search/filter URLs stay distinct and authenticated users do not receive another shopper's cached shell.
+- Because this edge layer sits in front of the generated OpenNext worker, it is separate from OpenNext's incremental cache. The response cache is for HTML page delivery; the incremental cache is for Next/OpenNext fetch and RSC caching semantics.
+- Example verification:
+
+```bash
+curl -s -D - -o /dev/null "https://shop-checkit.jamesthehoracle.workers.dev/products?demo-cache-bust=1" | grep -i x-cache-status
+curl -s -D - -o /dev/null "https://shop-checkit.jamesthehoracle.workers.dev/products?page=2&category=beauty" | grep -i x-cache-status
+```
+
+The second request to the same URL should show `x-cache-status: HIT` when the Workers cache entry is warm.
+
 ## Trade-offs & Known Limitations
 
 - DummyJSON cart behavior is simulated through its REST endpoints, so cart persistence is intentionally handled client-side in this app instead of pretending the API is durable.
-- The Cloudflare deployment setup is included through package/config/scripts, but advanced Worker response caching with `x-cache-status` still needs a custom OpenNext worker entry if you want full bonus parity.
+- OpenNext persistent cache storage is not enabled yet because the current Cloudflare account cannot turn on R2 without billing being active. During preview/deploy, OpenNext's own incremental cache therefore remains on the dummy adapter until billing is available.
 - The rating filter behaves like a URL-driven refinement layered on top of the fetched dataset, which is a deliberate compromise to keep the server-only data rule intact without adding a bespoke search backend.
 
 ## If We Had More Time
@@ -69,7 +92,9 @@ The next feature I would add is a personalized discovery layer built around `rec
 ## Bonus Tasks
 
 - Streaming reviews: implemented on `/products/[id]` with `Suspense` and a delayed async server component.
-- Cloudflare deployment: `@opennextjs/cloudflare`, `wrangler.toml`, and `pnpm cf:build` / `pnpm cf:deploy` scripts are included.
+- Cloudflare deployment: `@opennextjs/cloudflare`, `wrangler.jsonc`, and `pnpm cf:build` / `pnpm cf:deploy` scripts are included.
+- Cloudflare Workers edge caching: `/products` now adds an `x-cache-status` header from a custom worker wrapper around the OpenNext output so HIT/MISS can be checked in DevTools or with `curl`.
+- OpenNext cache mapping is documented above, including the current limitation that persistent R2-backed incremental cache storage is still pending Cloudflare billing activation.
 - Accessibility/testing: Vitest plus Testing Library cover `ProductCard`, `ProductThumb`, `useDebounce`, and `formatPrice`.
 
 ## Verification

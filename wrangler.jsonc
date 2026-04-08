@@ -1,6 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"main": ".open-next/worker.js",
+	"main": "custom-worker.ts",
 	"name": "shop-checkit",
 	"compatibility_date": "2026-04-08",
 	"compatibility_flags": [
@@ -23,5 +23,12 @@
 		// Enable image optimization
 		// see https://opennext.js.org/cloudflare/howtos/image
 		"binding": "IMAGES"
-	}
+	},
+	"r2_buckets": [
+		{
+			"bucket_name": "shop-checkit-cache",
+			"binding": "NEXT_INC_CACHE_R2_BUCKET",
+			"remote": true
+		}
+	]
 }

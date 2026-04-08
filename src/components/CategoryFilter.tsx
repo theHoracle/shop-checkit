@@ -15,6 +15,22 @@ export function CategoryFilter({
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (event.target.value === "all") {
+      const query = buildSearchParams(searchParams, {
+        category: undefined,
+        page: 1,
+      });
+      router.push(`${pathname}${query ? `?${query}` : ""}`);
+      return;
+    }
+    const query = buildSearchParams(searchParams, {
+      category: event.target.value,
+      page: 1,
+    });
+    router.push(`${pathname}${query ? `?${query}` : ""}`);
+  };
+
   return (
     <label className="flex items-center justify-between max-w-fit gap-3 rounded-full border border-line bg-surface px-4">
       <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
@@ -24,15 +40,9 @@ export function CategoryFilter({
         aria-label="Filter by category"
         className="h-12 bg-transparent text-sm outline-none"
         value={selectedCategory}
-        onChange={(event) => {
-          const query = buildSearchParams(searchParams, {
-            category: event.target.value,
-            page: 1,
-          });
-          router.push(`${pathname}${query ? `?${query}` : ""}`);
-        }}
+        onChange={handleCategoryChange}
       >
-        <option value="">All departments</option>
+        <option value="all">All departments</option>
         {categories.map((category) => (
           <option key={category.slug} value={category.slug}>
             {category.name}

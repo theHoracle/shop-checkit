@@ -12,14 +12,14 @@ export default function ProductsLoading() {
 
   return (
     <div className="container-shell space-y-8 py-10">
-      <Skeleton className="h-10 w-40" />
+      <Skeleton className="h-24 w-full" />
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {skeletonKeys.map((key) => (
           <div
             key={key}
-            className="rounded-[2rem] border border-line bg-surface p-4"
+            className="rounded-4xl border border-line bg-surface p-4"
           >
-            <Skeleton className="aspect-[4/4.4] w-full rounded-[1.75rem]" />
+            <Skeleton className="aspect-[4/4.4] w-full rounded-3xl" />
             <Skeleton className="mt-4 h-4 w-24" />
             <Skeleton className="mt-3 h-8 w-4/5" />
             <Skeleton className="mt-3 h-4 w-full" />
